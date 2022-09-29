@@ -1,0 +1,9 @@
+
+
+
+function fancyText(str: string) :: string:
+    set {_chars::*} to split "ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘQʀꜱᴛᴜᴠᴡxʏᴢ" at ""
+    set {_chars1::*} to split "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" at ""
+    loop (size of {_chars::*}) times:
+        replace all {_chars1::%loop-value%}, {_chars1::%loop-value+26%} in {_str} with {_chars::%loop-value%}
+    return {_str}
