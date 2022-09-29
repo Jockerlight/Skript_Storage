@@ -1,0 +1,27 @@
+
+function generatespiral(pos: location, size: integer, block: itemtype = red concrete, spacing: integer = 2):
+    set {_unix} to (unix timestamp of now)
+
+    set {_length} to 1
+    loop {_size} times:
+        set {_direction} to 1 if ({_direction} ? 5) > 4
+        set block at {_pos} to {_block}
+        if {_direction} = 1:
+            set {_pos} to (location {_spacing} north of {_pos})
+        if {_direction} = 2:
+            set {_pos} to (location {_spacing} east of {_pos})
+        if {_direction} = 3:
+            set {_pos} to (location {_spacing} south of {_pos})
+        if {_direction} = 4:
+            set {_pos} to (location {_spacing} west of {_pos})
+        add 1 to {_currentlength}
+        if {_currentlength} = {_length}:
+
+            delete {_currentlength}
+            add 1 to {_cycle}
+            add 1 to {_direction}
+
+            if {_cycle} = 2:
+                delete {_cycle}
+                add 1 to {_length}
+                
