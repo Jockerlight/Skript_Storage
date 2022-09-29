@@ -1,0 +1,116 @@
+
+
+
+function Holograms_Create(id: string, lines: string, loc: location, inverse: boolean = false):
+	if {api::holograms::%{_id}%::*} is not set:
+		set {_splitted_lines::*} to split {_lines} at "|"
+		if {_inverse} = true:
+			set {_splitted_lines::*} to reversed {_splitted_lines::*}
+		set {_offset} to 0
+		set {api::holograms::%{_id}%::inverse} to {_inverse}
+		set {api::holograms::%{_id}%::location} to {_loc}
+		set {api::holograms::%{_id}%::is_loaded} to false
+		set {_loops} to 0
+		loop {_splitted_lines::*}:
+			add 1 to {_loops}
+			set {api::holograms::%{_id}%::offset} to {_offset}
+			set {api::holograms::%{_id}%::lines::%{_loops}%} to loop-value
+		Holograms_Load({_id})
+
+function Holograms_Delete(id: string):
+	if {api::holograms::%{_id}%::*} is set:
+		set {_offset} to 0
+		set {_inverse} to {api::holograms::%{_id}%::inverse}
+		set {_location} to {api::holograms::%{_id}%::location}
+		loop {api::holograms::%{_id}%::lines::*}:
+			set {_offset} to {_offset} - 0.25 if {_inverse} = true
+			set {_offset} to {_offset} + 0.25 if {_inverse} = false
+			kill all entities in radius 0.01 of location {_offset} below {_location} where [input = armor stand]
+		delete {api::holograms::%{_id}%::*}
+
+function Holograms_SetLine(id: string, line: integer, new_line: string):
+	if {api::holograms::%{_id}%::*} is set:
+		loop {api::holograms::%{_id}%::lines::*}:
+			set {_loop_line} to loop-index parsed as an integer
+			if {_loop_line} = {_line}:
+				set {api::holograms::%{_id}%::lines::%loop-index%} to {_new_line}
+		Holograms_Unload({_id})
+		Holograms_Load({_id})
+
+function Holograms_Insertline(id: string, line: integer, new_line: string):
+	if {api::holograms::%{_id}%::*} is set:
+		set {_lines::*} to {api::holograms::%{_id}%::lines::*}
+		set {_loops} to 0
+		loop {_lines::*}:
+			add 1 to {_loops}
+			if {_loops} = {_line}:
+				add {_new_line} to {_new_lines::*}
+			add loop-value to {_new_lines::*}
+		set {api::holograms::%{_id}%::lines::*} to {_new_lines::*}
+		Holograms_Unload({_id})
+		Holograms_Load({_id})
+
+function Holograms_RemoveLine(id: string, line: integer):
+	if {api::holograms::%{_id}%::is_loaded} is true:
+		if {api::holograms::%{_id}%::lines::%{_line}%} is set:
+			delete {api::holograms::%{_id}%::lines::%{_line}%}
+			set {api::holograms::%{_id}%::lines::*} to {api::holograms::%{_id}%::lines::*}
+			Holograms_Unload({_id})
+			Holograms_Load({_id})
+
+function Holograms_LoadAll():
+	Holograms_UnloadAll()
+	loop indices of {api::holograms::*}:
+		set {_id} to loop-value
+		set {_offset} to 0
+		set {_inverse} to {api::holograms::%{_id}%::inverse}
+		set {_location} to {api::holograms::%{_id}%::location}
+		loop {api::holograms::%{_id}%::lines::*}:
+			set {_offset} to {_offset} - 0.25 if {_inverse} = true
+			set {_offset} to {_offset} + 0.25 if {_inverse} = false
+			if loop-value-2 != "{empty}":
+				spawn 1 armor stand at location {_offset} below {_location}
+				set {_stand} to the last spawned armor stand
+				add "{CustomNameVisible:1,Small:1,Invisible:1,Invulnerable:1,NoGravity:1}" to nbt of {_stand}
+				set the display name of {_stand} to colored loop-value-2
+		set {api::holograms::%{_id}%::is_loaded} to true
+
+function Holograms_UnloadAll():
+	loop indices of {api::holograms::*}:
+		set {_id} to loop-value
+		set {_offset} to 0
+		set {_inverse} to {api::holograms::%{_id}%::inverse}
+		set {_location} to {api::holograms::%{_id}%::location}
+		loop {api::holograms::%{_id}%::lines::*}:
+			set {_offset} to {_offset} - 0.25 if {_inverse} = true
+			set {_offset} to {_offset} + 0.25 if {_inverse} = false
+			kill all entities in radius 0.01 of location {_offset} below {_location} where [input = armor stand]
+		set {api::holograms::%{_id}%::is_loaded} to false
+
+function Holograms_Load(id: string):
+	Holograms_Unload({_id})
+	if {api::holograms::%{_id}%::*} is set:
+		set {_offset} to 0
+		set {_inverse} to {api::holograms::%{_id}%::inverse}
+		set {_location} to {api::holograms::%{_id}%::location}
+		loop {api::holograms::%{_id}%::lines::*}:
+			set {_offset} to {_offset} - 0.25 if {_inverse} = true
+			set {_offset} to {_offset} + 0.25 if {_inverse} = false
+			if loop-value != "{empty}":
+				spawn 1 armor stand at location {_offset} below {_location}
+				set {_stand} to the last spawned armor stand
+				add "{CustomNameVisible:1,Small:1,Invisible:1,Invulnerable:1,NoGravity:1}" to nbt of {_stand}
+				set the display name of {_stand} to colored loop-value
+		set {api::holograms::%{_id}%::is_loaded} to true
+
+function Holograms_Unload(id: string):
+	if {api::holograms::%{_id}%::*} is set:
+		set {_offset} to 0
+		set {_inverse} to {api::holograms::%{_id}%::inverse}
+		set {_location} to {api::holograms::%{_id}%::location}
+		loop {api::holograms::%{_id}%::lines::*}:
+			set {_offset} to {_offset} - 0.25 if {_inverse} = true
+			set {_offset} to {_offset} + 0.25 if {_inverse} = false
+			kill all entities in radius 0.01 of location {_offset} below {_location} where [input = armor stand]
+		set {api::holograms::%{_id}%::is_loaded} to false
+
