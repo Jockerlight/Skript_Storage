@@ -1,0 +1,36 @@
+
+
+on join:
+  while player is online:
+    add 1 second to {data::playtime::%player's uuid%}
+    wait 1 second
+
+function timeShort(time: timespan) :: string:
+    set {_time} to "%{_time}%"
+    replace all " seconds" and " second" in {_time} with "s"
+    replace all " minutes" and " minute" in {_time} with "m"
+    replace all " hours" and " hour" in {_time} with "h"
+    replace all " days" and " day" in {_time} with "d"
+    replace all " and" in {_time} with ""
+    return {_time}
+
+
+function getPT(p: player) :: text:
+    set {_u} to uuid of {_p}
+    set {_time} to timeShort({database::playtime::%{_u}%})
+    return "&8(&4&lPT&8) &e%{_p}%&e's &7Playtime! &8▪ %{_time}%"
+
+
+on join:
+    while player is online:
+        add 1 second to {database::playtime::%player's uuid%}
+        wait 1 second
+
+
+
+command /pt [<player>]:
+    trigger:
+        if arg-1 is not set:
+            getPT(player)
+        else:
+            getPT(arg-1)
