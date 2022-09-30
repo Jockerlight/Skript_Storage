@@ -1,0 +1,37 @@
+
+
+command /emotelist:
+	trigger:
+		send "&dList of chat emojis:"
+		send "&7:shrug: - ¯\_(ツ)_/¯"
+		send "&7:sunglasses: - (⌐■_■)"
+		send "&7:angry: - ಠ_ಠ"
+		send "&7:tableflip: - (╯°□°）╯︵ ┻━┻"
+		send "&7:uwu: - (ᴜωᴜ)"
+		send "&7:give: - ༼ つ ◕_◕ ༽つ"
+		send "&7:wut: - (☉.☉)"
+		send "&7:happy: - („• ֊ •„)"
+		send "&7:sad: - (┳_┳)"
+		send "&7:fight: - (งò_ó)ง"
+		send "&7:flex: - ᕦ(ò_ó)ᕤ"
+		send "&7:woa: - (•.•)"
+		send "&7:dance: - (~‾⌣‾)~"
+		send "&7:eyes: - ◕.◕"
+
+
+on chat:
+	replace all ":shrug:" in message with "¯\_(ツ)_/¯"
+	replace all ":sunglasses:" in message with "(⌐■_■)"
+	replace all ":angry:" in message with "ಠ_ಠ"
+	replace all ":tableflip:" in message with "(╯°□°）╯︵ ┻━┻"
+	replace all ":uwu:" in message with "(ᴜωᴜ)"
+	replace all ":give:" in message with "༼ つ ◕_◕ ༽つ"
+	replace all ":wut:" in message with "(☉.☉)"
+	replace all ":happy:" in message with "（„• ֊ •„)"
+	replace all ":sad:" in message with "(┳_┳)"
+	replace all ":fight:" in message with "(งò_ó)ง"
+	replace all ":flex:" in message with "ᕦ(ò_ó)ᕤ"
+	replace all ":woa:" in message with "(•.•)"
+	replace all ":dance:" in message with "(~‾⌣‾)~"
+	replace all ":eyes:" in message with "◕.◕"
+	
