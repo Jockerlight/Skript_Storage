@@ -1,0 +1,32 @@
+
+
+
+function WarpGUI(p: player):
+    set {_inv} to chest inventory with 6 rows named "&b&lWarps"
+    set {_n} to 0
+    loop {warps::*}:
+        set slot {_n} of {_inv} to {warps::items::%loop-value%} named colored loop-value
+        add 1 to {_n}
+    open {_inv} to {_p}
+command /warps:
+    trigger:
+        WarpGUI(player)
+command /set-warp <text> <item>:
+    permission: op
+    trigger:
+        if {warps::*} does not contain arg 1:
+            add arg 1 to {warps::*}
+        set {warps::locations::%colored arg 1%} to player's location
+        set {warps::items::%arg 1%} to arg 2
+command /del-warp <text>:
+    permission: op
+    trigger:
+        if {warps::*} contain arg 1:
+            remove arg 1 from {warps::*}
+            delete {warps::locations::%colored arg 1%}
+            delete {warps::items::%arg 1%}
+
+on inventory click:
+    if event-inventory's name = "&bWarps":
+        cancel event
+        teleport player to {warps::locations::%clicked slot's name%}
